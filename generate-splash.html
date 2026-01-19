@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Splash Screen</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #3a8eef;
+        }
+        .info {
+            text-align: center;
+            color: #666;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VOID³ Splash Screen Generator</h1>
+        <p class="info">Откройте иконку и нажмите "Generate & Download"</p>
+        
+        <input type="file" id="iconInput" accept="image/png,image/jpeg" style="display: block; margin: 20px auto;">
+        
+        <canvas id="splashCanvas" width="1200" height="1200"></canvas>
+        
+        <button onclick="generateSplash()">Generate & Download Splash.png</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('splashCanvas');
+        const ctx = canvas.getContext('2d');
+        let iconImage = null;
+
+        document.getElementById('iconInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        iconImage = img;
+                        generateSplash();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateSplash() {
+            if (!iconImage) {
+                alert('Пожалуйста, сначала загрузите иконку');
+                return;
+            }
+
+            // Темный фон (#000011)
+            ctx.fillStyle = '#000011';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Размеры для центрирования иконки
+            const iconSize = Math.min(canvas.width, canvas.height) * 0.4; // 40% от размера canvas
+            const x = (canvas.width - iconSize) / 2;
+            const y = (canvas.height - iconSize) / 2;
+
+            // Рисуем иконку по центру
+            ctx.drawImage(iconImage, x, y, iconSize, iconSize);
+
+            // Можно добавить эффект свечения вокруг иконки
+            ctx.shadowBlur = 50;
+            ctx.shadowColor = '#4a9eff';
+            ctx.drawImage(iconImage, x, y, iconSize, iconSize);
+            ctx.shadowBlur = 0;
+        }
+
+        // Функция для скачивания
+        document.querySelector('button').addEventListener('click', function() {
+            if (!iconImage) {
+                alert('Пожалуйста, сначала загрузите иконку');
+                return;
+            }
+
+            generateSplash();
+            
+            // Создаем ссылку для скачивания
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'splash.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        });
+
+        // Попытка загрузить иконку автоматически
+        window.addEventListener('load', function() {
+            const iconImg = new Image();
+            iconImg.crossOrigin = 'anonymous';
+            iconImg.onload = function() {
+                iconImage = iconImg;
+                generateSplash();
+            };
+            iconImg.onerror = function() {
+                console.log('Не удалось загрузить иконку автоматически. Загрузите вручную.');
+            };
+            // Пытаемся загрузить из public/icon.png (если открыто через сервер)
+            iconImg.src = '/icon.png';
+        });
+    </script>
+</body>
+</html>
