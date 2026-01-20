@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const ROOT_URL = (process.env.NEXT_PUBLIC_URL || 'https://void3-game2.vercel.app').replace(/\/$/, '')
+const ROOT_URL = (process.env.NEXT_PUBLIC_URL || 'https://izhndv.vercel.app').replace(/\/$/, '')
 
 function withValidProperties(properties: Record<string, undefined | string | string[] | boolean>) {
   return Object.fromEntries(
