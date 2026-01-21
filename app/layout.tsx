@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
 
-const ROOT_URL = (process.env.NEXT_PUBLIC_URL || 'https://void-ruddy.vercel.app').replace(/\/$/, '')
+const ROOT_URL = (process.env.NEXT_PUBLIC_URL || 'https://izhndv.vercel.app').replace(/\/$/, '')
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
