@@ -66,6 +66,7 @@ npm start
 ```env
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x...  # Адрес смарт-контракта
 NEXT_PUBLIC_URL=https://your-app.vercel.app  # URL приложения
+NEXT_PUBLIC_BASE_APP_ID=696fd000b1df0aaec05af3c8  # Base App ID (опционально, по умолчанию используется ваш ID)
 ```
 
 ## 🎮 Как играть
